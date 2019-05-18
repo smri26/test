@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+   <style>
+      * {
+      box-sizing: border-box;
+      }
+      /* Create two equal columns that floats next to each other */
+      .column {
+      float: left;
+      width: 50%;
+      padding: 10px;
+      }
+      /* Clear floats after the columns */
+      .row:after {
+      content: "";
+      display: table;
+      clear: both;
+      }
+      form {
+      padding-top: 50px;
+      padding-left: 50px;
+      line-height: 2;
+      }
+      .guest {
+      padding-left: 20px;
+      visibility: hidden;
+      }
+   </style>
+   <head>
+      <title>Student Event Sign Up</title>
+   </head>
+   <form>
+      <div class="row">
+         <div class="column">
+            Ticket Number:  
+            <input type="text" name="ticketNum" size="5"><br>
+            Student ID:  
+            <input type="text" name="id" size="6"><br>
+            Last Name: 
+            <input type="text" name="lastName" size="15"><br>
+            First Name: 
+            <input type="text" name="firstName" size="15"><br>
+            Middle Initial:  
+            <input type="text" name="midInit" size="1"><br>
+            Grade:  
+            <input type="text" name="midInit" size="2"><br><br>
+            Guest:  
+            <input type="checkbox" name="guest"><br>
+            <div class= "guest">
+               Last Name: 
+               <input type="text" name="lastName" size="15"><br>
+               First Name: 
+               <input type="text" name="firstName" size="15"><br>
+               <strong>Payment Method</strong><br>
+               <input type="radio" name="pay" value="cash">Cash<br>
+               <input type="radio" name="pay" value="check">Check  <input type="text" name="checkNum" placeholder="Check Number" size="12" maxLength="9"><br>
+               <input type="radio" name="pay" value="waiver">Financial Waiver<br><br>
+            </div>
+         </div>
+         <div class="column">
+            <strong>Payment Method</strong><br>
+            <input type="radio" name="pay" value="cash">Cash<br>
+            <input type="radio" name="pay" value="check">Check  <input type="text" name="checkNum" placeholder="Check Number" size="12" maxLength="9"><br>
+            <input type="radio" name="pay" value="waiver">Financial Waiver<br><br>
+         </div>
+         <strong>Student Obligations</strong><br>
+         Obligations taken care of? <input type="checkbox" name="oblig"><br>
+      </div>
+      </div>
+      <div class="row">
+         <div class="column">
+            <button>Delete</button>
+         </div>
+         <div class="column">
+            <input type="submit" value="Save">
+         </div>
+      </div>
+   </form>
+</html>

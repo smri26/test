@@ -1,0 +1,155 @@
+<!--
+
+Web frontend for petsapp
+
+COGS121 by Philip Guo
+https://github.com/pgbovine/COGS121
+
+Start ../server.js and then visit this URL to view this webpage:
+
+http://localhost:3000/petsapp.html
+
+-->
+
+<html>
+<head>
+<title>PetsApp</title>
+
+<!-- put your Firebase initialization code up here before all other JavaScript code. Here's an example snippet:  -->
+
+<script src="https://www.gstatic.com/firebasejs/5.11.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.11.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.11.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.11.1/firebase-database.js"></script>
+
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBiOVHj2BtyRIBeY6tetXv-1Jf7fUDOeiw",
+    authDomain: "samplepetapp.firebaseapp.com",
+    databaseURL: "https://samplepetapp.firebaseio.com",
+    projectId: "samplepetapp",
+    storageBucket: "samplepetapp.appspot.com",
+    messagingSenderId: "352012128473",
+    appId: "1:352012128473:web:6f16b7a6af4d678a"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<script src="jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+// jQuery convention for running when the document has been fully loaded:
+$(document).ready(() => {
+  const database = firebase.database();
+
+  $('#resetButton').click(() => {
+    console.log('Resetting the database');
+
+
+    database.ref('students/').remove(); // delete the entire collection
+
+    // writes data to the database:
+    database.ref('students/1001').set({id: '1001', name: 'Smrithi', grade: '10', guest : 'No'});
+    database.ref('students/1002').set({id: '1002', name: 'Ryan', grade: '10', guest : 'No'});
+    database.ref('students/1003').set({id: '1003', name: 'Serena', grade: '10', guest : 'No'});
+    database.ref('students/1004').set({id: '1004', name: 'Sanjith', grade: '10', guest : 'No'});
+  });
+
+  // use .on('value' to get notified in real-time whenever anyone
+  // on the internet updates your database. cool!
+  database.ref('students/').on('value', (snapshot) => {
+    const allUsers = snapshot.val();
+    console.log('users/ changed:', allUsers);
+    if (allUsers) {
+      $('#status').html(''); // clear the HTML
+      $('#status').append('List of students:');
+      Object.keys(allUsers).forEach((id) => {
+        $('#status').append('<li>' + id + ' ' + allUsers[id].name + ' ' + allUsers[id].grade + ' ' + allUsers[id].guest+ '</li>');
+      });
+    }
+  });
+
+  $('#readButton').click(() => {
+    const key = 'students/' + $('#readIdBox').val();
+
+    // 'once' reads the value once from the database
+    database.ref(key).once('value', (snapshot) => {
+      const data = snapshot.val();
+
+      console.log('You received some data!', data);
+      if (!data) {
+        // clear the display
+        $('#jobDiv').html('');
+        $('#status').html('Error: could not find user: ' + key);
+        return;
+      }
+
+      if (data.name && data.grade && data.guest) {
+        $('#jobDiv').html('My name is ' + data.name + ', grade=' +data.grade);
+      } else {
+        // clear the display
+        $('#jobDiv').html('');
+      }
+    });
+  });
+
+  $('#allUsersButton').click(() => {
+    database.ref('students/').once('value', (snapshot) => {
+      const data = snapshot.val();
+      console.log('You received some data!', data);
+      $('#status').html('All students: ' + Object.keys(data));
+    });
+  });
+
+  $('#insertButton').click(() => {
+    const id = $('#insertIdBox').val();
+    database.ref('students/' + id).set({
+      name: $('#insertNameBox').val(),
+      grade: $('#insertGradeBox').val(),
+      guest: $('#insertGuestBox').val()
+    });
+  });
+
+  $('#deleteButton').click(() => {
+    const id = $('#deleteIdBox').val();
+    database.ref('students/' + id).remove();
+  });
+});
+</script>
+
+</head>
+<body>
+  <h1>Welcome to Student Sign Up!</h1>
+
+  <button id="resetButton">Reset database</button>
+  <hr/>
+
+  Name: <input id="readIdBox" type="text" size="20"/>
+  <button id="readButton">Get profile</button>
+  <button id="allUsersButton">Get all students</button>
+
+  <div id="jobDiv"></div>
+
+  <hr/>
+  StudentId: <input id="insertIdBox" type="text" size="20"/>  
+  Name: <input id="insertNameBox" type="text" size="20"/>
+  Grade: <input id="insertGradeBox" type="text" size="20"/>
+  Guest: <input id="insertGuestBox" type="text" size="20"/>
+  <button id="insertButton">Insert into database</button>
+
+  <hr/>
+  Name: <input id="deleteIdBox" type="text" size="20"/>
+  <button id="deleteButton">Delete from database</button>
+
+  <hr/>
+  <div id="status"></div>
+</body>
+</html>
